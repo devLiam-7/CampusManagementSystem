@@ -1,169 +1,188 @@
 package ui;
 
-
 import utils.ThemeManager;
-import ui.AddStudentFrame;
+import javax.swing.*;
+import java.awt.*;
 
-public class AdminDashboard extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AdminDashboard.class.getName());
+public class AdminDashboard extends JFrame {
+
+    private String role;
 
     public AdminDashboard() {
+        this.role = "ADMIN";
         initComponents();
-        for (java.awt.Component c : getContentPane().getComponents()) {
-        if (c instanceof javax.swing.JButton b) {
-        b.setFocusPainted(false);
-        b.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
-    }
-}
-        setLocationRelativeTo(null);
-        ThemeManager.applyTheme(this);
     }
 
     public AdminDashboard(String role) {
-    initComponents();
-    setLocationRelativeTo(null);
-   
+        this.role = role;
+        initComponents();
+    }
 
-    if (!role.equals("ADMIN")) {
-       bntAddStudent.setEnabled(false);
-   }
-}
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        setTitle("Campus Management System - Dashboard");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(520, 620);
+        setLocationRelativeTo(null);
+        setResizable(false);
 
-        bntAddStudent = new javax.swing.JButton();
-        bntViewStudent = new javax.swing.JButton();
-        btnUpdateAttendance = new javax.swing.JButton();
-        btnDarkMode = new javax.swing.JButton();
-        btnFees = new javax.swing.JButton();
-        btnTimeTable = new javax.swing.JButton();
-        btnDashboard = new javax.swing.JButton();
-        btnCritical = new javax.swing.JButton();
+        // ── MAIN PANEL
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(new Color(245, 247, 250));
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("ADMIN PANEL");
+        // ── HEADER
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(37, 99, 235));
+        headerPanel.setPreferredSize(new Dimension(520, 100));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
 
-        bntAddStudent.setText("Add Student");
-        bntAddStudent.addActionListener(this::bntAddStudentActionPerformed);
+        JPanel headerLeft = new JPanel();
+        headerLeft.setOpaque(false);
+        headerLeft.setLayout(new BoxLayout(headerLeft, BoxLayout.Y_AXIS));
 
-        bntViewStudent.setText("View Student");
-        bntViewStudent.addActionListener(this::bntViewStudentActionPerformed);
+        JLabel titleLabel = new JLabel("🎓 Campus Management");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titleLabel.setForeground(Color.WHITE);
 
-        btnUpdateAttendance.setText("Update Attendance");
-        btnUpdateAttendance.addActionListener(this::btnUpdateAttendanceActionPerformed);
+        JLabel roleLabel = new JLabel("Logged in as: " + role);
+        roleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        roleLabel.setForeground(new Color(191, 219, 254));
 
-        btnDarkMode.setText("Dark Mode");
-        btnDarkMode.addActionListener(this::btnDarkModeActionPerformed);
+        headerLeft.add(titleLabel);
+        headerLeft.add(Box.createVerticalStrut(4));
+        headerLeft.add(roleLabel);
 
-        btnFees.setText("Fee Management");
-        btnFees.addActionListener(this::btnFeesActionPerformed);
+        // Dark mode button in header
+        JButton btnDarkMode = new JButton("🌙");
+        btnDarkMode.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
+        btnDarkMode.setForeground(Color.WHITE);
+        btnDarkMode.setBackground(new Color(59, 130, 246));
+        btnDarkMode.setBorderPainted(false);
+        btnDarkMode.setFocusPainted(false);
+        btnDarkMode.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnDarkMode.addActionListener(e -> {
+            ThemeManager.setDarkMode(!ThemeManager.isDarkMode());
+            ThemeManager.applyTheme(this);
+        });
 
-        btnTimeTable.setText("TimeTable");
-        btnTimeTable.addActionListener(this::btnTimeTableActionPerformed);
+        headerPanel.add(headerLeft, BorderLayout.WEST);
+        headerPanel.add(btnDarkMode, BorderLayout.EAST);
 
-        btnDashboard.setText("Admin Dashboard");
-        btnDashboard.addActionListener(this::btnDashboardActionPerformed);
+        // ── CONTENT PANEL
+        JPanel contentPanel = new JPanel();
+        contentPanel.setBackground(new Color(245, 247, 250));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        btnCritical.setText("Critical Students");
-        btnCritical.addActionListener(this::btnCriticalActionPerformed);
+        // Section label
+        JLabel sectionLabel = new JLabel("Quick Actions");
+        sectionLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        sectionLabel.setForeground(new Color(100, 116, 139));
+        sectionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnDarkMode))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(bntAddStudent)
-                                    .addComponent(bntViewStudent)
-                                    .addComponent(btnUpdateAttendance))
-                                .addGap(0, 256, Short.MAX_VALUE)))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnTimeTable)
-                            .addComponent(btnFees)
-                            .addComponent(btnDashboard)
-                            .addComponent(btnCritical))
-                        .addGap(0, 0, Short.MAX_VALUE))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addComponent(btnDarkMode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bntAddStudent)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(bntViewStudent)
-                .addGap(12, 12, 12)
-                .addComponent(btnUpdateAttendance)
-                .addGap(12, 12, 12)
-                .addComponent(btnFees)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnTimeTable)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCritical)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnDashboard)
-                .addContainerGap(30, Short.MAX_VALUE))
-        );
+        contentPanel.add(sectionLabel);
+        contentPanel.add(Box.createVerticalStrut(15));
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+        // ── MENU BUTTONS GRID (2 columns)
+        JPanel gridPanel = new JPanel(new GridLayout(0, 2, 12, 12));
+        gridPanel.setOpaque(false);
+        gridPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    private void bntAddStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntAddStudentActionPerformed
-        System.out.println("Button clicked");
-        new AddStudentFrame().setVisible(true);
-    }//GEN-LAST:event_bntAddStudentActionPerformed
+        // Button definitions: label, emoji, color
+        Object[][] buttons = {
+            {"Add Student",       "👤", new Color(37, 99, 235)},
+            {"View Students",     "📋", new Color(5, 150, 105)},
+            {"Update Attendance", "📅", new Color(217, 119, 6)},
+            {"Fee Management",    "💰", new Color(124, 58, 237)},
+            {"Timetable",         "🗓", new Color(220, 38, 38)},
+            {"Critical Students", "⚠️",  new Color(234, 88, 12)},
+        };
 
-    private void bntViewStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntViewStudentActionPerformed
-    new ViewStudentsFrame().setVisible(true);
-    }//GEN-LAST:event_bntViewStudentActionPerformed
+        for (Object[] btn : buttons) {
+            String label = (String) btn[0];
+            String emoji = (String) btn[1];
+            Color color  = (Color)  btn[2];
 
-    private void btnUpdateAttendanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateAttendanceActionPerformed
-        new UpdateAttendanceFrame().setVisible(true);
-    }//GEN-LAST:event_btnUpdateAttendanceActionPerformed
+            JButton button = createMenuButton(label, emoji, color);
 
-    private void btnDarkModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDarkModeActionPerformed
-    ThemeManager.setDarkMode(!ThemeManager.isDarkMode());
-    ThemeManager.applyTheme(this);
-    }//GEN-LAST:event_btnDarkModeActionPerformed
+            // Disable non-view buttons for non-admin
+            if (!role.equals("ADMIN") &&
+                (label.equals("Add Student") || label.equals("Update Attendance") || label.equals("Fee Management"))) {
+                button.setEnabled(false);
+                button.setToolTipText("Admin only");
+            }
 
-    private void btnFeesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFeesActionPerformed
-        new FeeManagementFrame().setVisible(true);
-    }//GEN-LAST:event_btnFeesActionPerformed
+            button.addActionListener(e -> handleNavigation(label));
+            gridPanel.add(button);
+        }
 
-    private void btnTimeTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimeTableActionPerformed
-        new Timetable().setVisible(true);
-    }//GEN-LAST:event_btnTimeTableActionPerformed
+        contentPanel.add(gridPanel);
+        contentPanel.add(Box.createVerticalStrut(20));
 
-    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
-       new AdminDashboardFrame().setVisible(true);
-    }//GEN-LAST:event_btnDashboardActionPerformed
+        // ── ADMIN DASHBOARD WIDE BUTTON
+        JButton btnDashboard = new JButton("📊  Admin Dashboard Overview");
+        btnDashboard.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnDashboard.setForeground(Color.WHITE);
+        btnDashboard.setBackground(new Color(15, 23, 42));
+        btnDashboard.setOpaque(true);
+        btnDashboard.setBorderPainted(false);
+        btnDashboard.setFocusPainted(false);
+        btnDashboard.setPreferredSize(new Dimension(100, 52));
+        btnDashboard.setMaximumSize(new Dimension(Integer.MAX_VALUE, 52));
+        btnDashboard.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnDashboard.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnDashboard.addActionListener(e -> new AdminDashboardFrame().setVisible(true));
+        contentPanel.add(btnDashboard);
 
-    private void btnCriticalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriticalActionPerformed
-       new CriticalStudentsFrame().setVisible(true);
-    }//GEN-LAST:event_btnCriticalActionPerformed
+        contentPanel.add(Box.createVerticalStrut(12));
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bntAddStudent;
-    private javax.swing.JButton bntViewStudent;
-    private javax.swing.JButton btnCritical;
-    private javax.swing.JButton btnDarkMode;
-    private javax.swing.JButton btnDashboard;
-    private javax.swing.JButton btnFees;
-    private javax.swing.JButton btnTimeTable;
-    private javax.swing.JButton btnUpdateAttendance;
-    // End of variables declaration//GEN-END:variables
+        // ── LOGOUT BUTTON
+        JButton btnLogout = new JButton("🚪  Logout");
+        btnLogout.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnLogout.setForeground(new Color(220, 38, 38));
+        btnLogout.setBackground(new Color(254, 242, 242));
+        btnLogout.setOpaque(true);
+        btnLogout.setBorderPainted(false);
+        btnLogout.setFocusPainted(false);
+        btnLogout.setPreferredSize(new Dimension(100, 40));
+        btnLogout.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnLogout.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnLogout.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnLogout.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                new LoginFrame().setVisible(true);
+                this.dispose();
+            }
+        });
+        contentPanel.add(btnLogout);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
+        setContentPane(mainPanel);
+    }
+
+    private JButton createMenuButton(String label, String emoji, Color color) {
+        JButton btn = new JButton("<html><center>" + emoji + "<br><b>" + label + "</b></center></html>");
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btn.setForeground(Color.WHITE);
+        btn.setBackground(color);
+        btn.setOpaque(true);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setPreferredSize(new Dimension(200, 72));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return btn;
+    }
+
+    private void handleNavigation(String label) {
+        switch (label) {
+            case "Add Student"       -> new AddStudent().setVisible(true);
+            case "View Students"     -> new ViewStudentsFrame().setVisible(true);
+            case "Update Attendance" -> new UpdateAttendanceFrame().setVisible(true);
+            case "Fee Management"    -> new FeeManagementFrame().setVisible(true);
+            case "Timetable"         -> new Timetable().setVisible(true);
+            case "Critical Students" -> new CriticalStudentsFrame().setVisible(true);
+        }
+    }
 }

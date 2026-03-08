@@ -1,135 +1,184 @@
 package ui;
+
 import utils.AuthService;
 import utils.ThemeManager;
-import database.DBConnection;
-import java.sql.*;
-import javax.swing.JOptionPane;
+import javax.swing.*;
+import java.awt.*;
 
-public class LoginFrame extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginFrame.class.getName());
+public class LoginFrame extends JFrame {
 
-   
+    private JTextField txtUsername;
+    private JPasswordField txtPassword;
+    private JButton btnLogin;
+    private JButton btnDarkMode;
+
     public LoginFrame() {
         initComponents();
-        for (java.awt.Component c : getContentPane().getComponents()) {
-        if (c instanceof javax.swing.JButton b) {
-        b.setFocusPainted(false);
-        b.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
-    }
-}
+        setTitle("Campus Management System");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(440, 520);
         setLocationRelativeTo(null);
-         setSize(400, 300);
-         ThemeManager.applyTheme(this);
-         
-         
+        setResizable(false);
     }
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+
     private void initComponents() {
+        // Main panel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBackground(new Color(245, 247, 250));
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txtUsername = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        txtPassword = new javax.swing.JPasswordField();
-        btnDarkMode = new javax.swing.JButton();
+        // ── TOP HEADER PANEL
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(new Color(37, 99, 235));
+        headerPanel.setPreferredSize(new Dimension(440, 160));
+        headerPanel.setLayout(new GridBagLayout());
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Login");
+        JLabel iconLabel = new JLabel("🎓");
+        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 48));
 
-        jLabel1.setText("Username :");
+        JLabel titleLabel = new JLabel("Campus Management");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titleLabel.setForeground(Color.WHITE);
 
-        jLabel2.setText("Password :");
+        JLabel subtitleLabel = new JLabel("Sign in to your account");
+        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        subtitleLabel.setForeground(new Color(191, 219, 254));
 
-        jButton1.setText("Login");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        JPanel headerContent = new JPanel();
+        headerContent.setOpaque(false);
+        headerContent.setLayout(new BoxLayout(headerContent, BoxLayout.Y_AXIS));
+        iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        headerContent.add(iconLabel);
+        headerContent.add(Box.createVerticalStrut(6));
+        headerContent.add(titleLabel);
+        headerContent.add(Box.createVerticalStrut(4));
+        headerContent.add(subtitleLabel);
+        headerPanel.add(headerContent);
 
-        btnDarkMode.setText("Dark Mode");
-        btnDarkMode.addActionListener(this::btnDarkModeActionPerformed);
+        // ── FORM CARD PANEL
+        JPanel cardPanel = new JPanel();
+        cardPanel.setBackground(Color.WHITE);
+        cardPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+            BorderFactory.createEmptyBorder(30, 35, 30, 35)
+        ));
+        cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                            .addComponent(txtPassword)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(jButton1)))
-                .addContainerGap(187, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnDarkMode)
-                .addGap(23, 23, 23))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(btnDarkMode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addComponent(jButton1)
-                .addContainerGap(119, Short.MAX_VALUE))
-        );
+        // Username field
+        JLabel userLabel = new JLabel("Username");
+        userLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        userLabel.setForeground(new Color(51, 65, 85));
+        userLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+        txtUsername = new JTextField();
+        txtUsername.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtUsername.setPreferredSize(new Dimension(340, 42));
+        txtUsername.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
+        txtUsername.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(203, 213, 225), 1),
+            BorderFactory.createEmptyBorder(5, 12, 5, 12)
+        ));
+        txtUsername.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Password field
+        JLabel passLabel = new JLabel("Password");
+        passLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        passLabel.setForeground(new Color(51, 65, 85));
+        passLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    String username = txtUsername.getText().trim();
-    String password = new String(txtPassword.getPassword()).trim();
+        txtPassword = new JPasswordField();
+        txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtPassword.setPreferredSize(new Dimension(340, 42));
+        txtPassword.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
+        txtPassword.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(203, 213, 225), 1),
+            BorderFactory.createEmptyBorder(5, 12, 5, 12)
+        ));
+        txtPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    String role = AuthService.login(username, password);
+        // Login button
+        btnLogin = new JButton("Sign In");
+        btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setBackground(new Color(37, 99, 235));
+        btnLogin.setOpaque(true);
+        btnLogin.setBorderPainted(false);
+        btnLogin.setFocusPainted(false);
+        btnLogin.setPreferredSize(new Dimension(340, 46));
+        btnLogin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 46));
+        btnLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnLogin.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnLogin.addActionListener(e -> handleLogin());
 
-    if (role != null) {
-        JOptionPane.showMessageDialog(this, "Login Successful: " + role);
+        // Dark mode button
+        btnDarkMode = new JButton("🌙  Dark Mode");
+        btnDarkMode.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnDarkMode.setForeground(new Color(100, 116, 139));
+        btnDarkMode.setBackground(new Color(241, 245, 249));
+        btnDarkMode.setOpaque(true);
+        btnDarkMode.setBorderPainted(false);
+        btnDarkMode.setFocusPainted(false);
+        btnDarkMode.setPreferredSize(new Dimension(340, 36));
+        btnDarkMode.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
+        btnDarkMode.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnDarkMode.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnDarkMode.addActionListener(e -> {
+            ThemeManager.setDarkMode(!ThemeManager.isDarkMode());
+            ThemeManager.applyTheme(this);
+        });
 
-        if (role.equals("ADMIN")) {
-            new AdminDashboard(role).setVisible(true);
-        } else {
-            new FacultyDashboard().setVisible(true);
+        // Assemble card
+        cardPanel.add(userLabel);
+        cardPanel.add(Box.createVerticalStrut(6));
+        cardPanel.add(txtUsername);
+        cardPanel.add(Box.createVerticalStrut(18));
+        cardPanel.add(passLabel);
+        cardPanel.add(Box.createVerticalStrut(6));
+        cardPanel.add(txtPassword);
+        cardPanel.add(Box.createVerticalStrut(24));
+        cardPanel.add(btnLogin);
+        cardPanel.add(Box.createVerticalStrut(10));
+        cardPanel.add(btnDarkMode);
+
+        // Wrapper with padding
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBackground(new Color(245, 247, 250));
+        wrapper.setBorder(BorderFactory.createEmptyBorder(25, 30, 30, 30));
+        wrapper.add(cardPanel, BorderLayout.CENTER);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        mainPanel.add(wrapper, BorderLayout.CENTER);
+
+        setContentPane(mainPanel);
+    }
+
+    private void handleLogin() {
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter username and password.");
+            return;
         }
 
-        this.dispose();
-    } else {
-        JOptionPane.showMessageDialog(this, "Invalid username or password.");
+        String role = AuthService.login(username, password);
+
+        if (role != null) {
+            if (role.equals("ADMIN")) {
+                new AdminDashboard(role).setVisible(true);
+            } else {
+                new FacultyDashboard().setVisible(true);
+            }
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid username or password.",
+                "Login Failed", JOptionPane.ERROR_MESSAGE);
+        }
     }
-    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void btnDarkModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDarkModeActionPerformed
-    ThemeManager.setDarkMode(!ThemeManager.isDarkMode());
-    ThemeManager.applyTheme(this);
-    }//GEN-LAST:event_btnDarkModeActionPerformed
-
-  
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new LoginFrame().setVisible(true));
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDarkMode;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPasswordField txtPassword;
-    private javax.swing.JTextField txtUsername;
-    // End of variables declaration//GEN-END:variables
 }
