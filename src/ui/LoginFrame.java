@@ -156,8 +156,9 @@ public class LoginFrame extends JFrame {
         }
 
         String role = AuthService.login(username, password);
-        Session.role = role;
         if (role != null) {
+            Session.role = role;
+            Session.username = username;
             if (role.equals("ADMIN")) {
                 new Dashboard().setVisible(true);
             } else {

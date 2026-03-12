@@ -63,14 +63,16 @@ public class CriticalStudents extends BaseFrame{
     try {
         Connection con = DBConnection.getConnection();
     tableModel.setRowCount(0);
+    
         String sql = """
-            SELECT s.roll_no, s.name, s.department, s.attendance,
-                   f.due_fee, f.status
-            FROM students s
-            JOIN fees f ON s.roll_no = f.roll_no
-            WHERE s.attendance < 75 OR f.status != 'PAID'
+        SELECT s.roll_no, s.name, s.department, s.attendance,
+           COALESCE(f.due_fee, 0) as due_fee, 
+           COALESCE(f.status, 'N/A') as status
+        FROM students s
+        LEFT JOIN fees f ON s.roll_no = f.roll_no
+        WHERE s.attendance < 75 OR f.status != 'PAID'
         """;
-
+        
         PreparedStatement pst = con.prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
 
@@ -97,6 +99,7 @@ public class CriticalStudents extends BaseFrame{
         }
 
         con.close();
+        applyRiskColors();
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, e.getMessage());
     }
