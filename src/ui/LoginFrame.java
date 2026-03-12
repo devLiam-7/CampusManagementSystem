@@ -1,9 +1,9 @@
 package ui;
-
 import utils.AuthService;
 import utils.ThemeManager;
 import javax.swing.*;
 import java.awt.*;
+import utils.Session;
 
 public class LoginFrame extends JFrame {
 
@@ -22,12 +22,11 @@ public class LoginFrame extends JFrame {
     }
 
     private void initComponents() {
-        // Main panel
+       
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBackground(new Color(245, 247, 250));
 
-        // ── TOP HEADER PANEL
         JPanel headerPanel = new JPanel();
         headerPanel.setBackground(new Color(37, 99, 235));
         headerPanel.setPreferredSize(new Dimension(440, 160));
@@ -57,7 +56,6 @@ public class LoginFrame extends JFrame {
         headerContent.add(subtitleLabel);
         headerPanel.add(headerContent);
 
-        // ── FORM CARD PANEL
         JPanel cardPanel = new JPanel();
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -66,7 +64,6 @@ public class LoginFrame extends JFrame {
         ));
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
 
-        // Username field
         JLabel userLabel = new JLabel("Username");
         userLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
         userLabel.setForeground(new Color(51, 65, 85));
@@ -82,7 +79,6 @@ public class LoginFrame extends JFrame {
         ));
         txtUsername.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Password field
         JLabel passLabel = new JLabel("Password");
         passLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
         passLabel.setForeground(new Color(51, 65, 85));
@@ -98,7 +94,6 @@ public class LoginFrame extends JFrame {
         ));
         txtPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Login button
         btnLogin = new JButton("Sign In");
         btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 15));
         btnLogin.setForeground(Color.WHITE);
@@ -112,8 +107,7 @@ public class LoginFrame extends JFrame {
         btnLogin.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnLogin.addActionListener(e -> handleLogin());
 
-        // Dark mode button
-        btnDarkMode = new JButton("🌙  Dark Mode");
+        btnDarkMode = new JButton("Dark Mode");
         btnDarkMode.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnDarkMode.setForeground(new Color(100, 116, 139));
         btnDarkMode.setBackground(new Color(241, 245, 249));
@@ -129,7 +123,6 @@ public class LoginFrame extends JFrame {
             ThemeManager.applyTheme(this);
         });
 
-        // Assemble card
         cardPanel.add(userLabel);
         cardPanel.add(Box.createVerticalStrut(6));
         cardPanel.add(txtUsername);
@@ -142,7 +135,6 @@ public class LoginFrame extends JFrame {
         cardPanel.add(Box.createVerticalStrut(10));
         cardPanel.add(btnDarkMode);
 
-        // Wrapper with padding
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(new Color(245, 247, 250));
         wrapper.setBorder(BorderFactory.createEmptyBorder(25, 30, 30, 30));
@@ -164,10 +156,10 @@ public class LoginFrame extends JFrame {
         }
 
         String role = AuthService.login(username, password);
-
+        Session.role = role;
         if (role != null) {
             if (role.equals("ADMIN")) {
-                new AdminDashboard(role).setVisible(true);
+                new Dashboard().setVisible(true);
             } else {
                 new FacultyDashboard().setVisible(true);
             }
