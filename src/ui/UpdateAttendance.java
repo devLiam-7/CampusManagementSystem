@@ -130,11 +130,7 @@ import javax.swing.*;
     }catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
     }
-    }
-    
-        public static void main(String[] args) {
-        new UpdateAttendance();
-    }
-    }
+   }   
+ }
    
     

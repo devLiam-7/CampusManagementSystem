@@ -32,6 +32,7 @@ public class ViewTimetable extends BaseFrame{
     filterPanel.setBackground(new Color(245, 247, 250));
     JLabel deptLabel = new JLabel("Department :");
     deptLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+    
     cmbDept = new JComboBox<>(new String[]{"ALL", "BSC", "BCA", "IT"});
     cmbDept.addActionListener(e -> loadTimetable(cmbDept.getSelectedItem().toString().equals("ALL") ? "" : cmbDept.getSelectedItem().toString()));
     filterPanel.add(deptLabel);

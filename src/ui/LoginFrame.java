@@ -16,7 +16,7 @@ public class LoginFrame extends JFrame {
         initComponents();
         setTitle("Campus Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(440, 520);
+        setSize(540, 520);
         setLocationRelativeTo(null);
         setResizable(false);
     }
@@ -52,7 +52,7 @@ public class LoginFrame extends JFrame {
         headerContent.add(iconLabel);
         headerContent.add(Box.createVerticalStrut(6));
         headerContent.add(titleLabel);
-        headerContent.add(Box.createVerticalStrut(4));
+        headerContent.add(Box.createVerticalStrut(6));
         headerContent.add(subtitleLabel);
         headerPanel.add(headerContent);
 

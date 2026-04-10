@@ -88,6 +88,21 @@ public class ViewStudents extends BaseFrame {
         btnDelete.setForeground(Color.WHITE);
         btnDelete.setFocusPainted(false);
         btnDelete.addActionListener(e -> deleteStudent());
+        
+        JButton btnProfile = new JButton("View Profile");
+        btnProfile.setBackground(new Color(22, 163, 74));
+        btnProfile.setForeground(Color.WHITE);
+        btnProfile.setFocusPainted(false);
+        btnProfile.addActionListener(e -> {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a student first!");
+        return;
+    }
+        int roll = (int) tableModel.getValueAt(selectedRow, 0);
+        new StudentProfile(roll).setVisible(true);
+    });
+        buttonPanel.add(btnProfile);
 
         buttonPanel.add(btnEdit);
         buttonPanel.add(btnDelete);

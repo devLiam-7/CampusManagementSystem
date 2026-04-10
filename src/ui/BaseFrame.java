@@ -58,7 +58,8 @@ public class BaseFrame extends JFrame{
         sidebar.add(makeSidebarLabel("STUDENTS"));
         sidebar.add(makeSidebarButton("Add Student"));
         sidebar.add(makeSidebarButton("View Students"));
-        sidebar.add(makeSidebarButton("Attendance"));
+        sidebar.add(makeSidebarButton("View Attendance"));
+        sidebar.add(makeSidebarButton("View Marks"));
         sidebar.add(Box.createVerticalStrut(15));
         sidebar.add(makeSidebarLabel("FEES Management"));
         sidebar.add(makeSidebarButton("Update Fees"));
@@ -73,6 +74,10 @@ public class BaseFrame extends JFrame{
     } else {
         sidebar.add(makeSidebarLabel("STUDENTS"));
         sidebar.add(makeSidebarButton("View Students"));
+        sidebar.add(makeSidebarButton("Mark Attendance"));
+        sidebar.add(makeSidebarButton("View Attendance"));
+        sidebar.add(makeSidebarButton("Add Marks"));
+        sidebar.add(makeSidebarButton("View Marks"));
         sidebar.add(Box.createVerticalStrut(15));
         sidebar.add(makeSidebarLabel("TIMETABLE"));
         sidebar.add(makeSidebarButton("View Timetable"));
@@ -126,7 +131,10 @@ protected void navigate(String screen) {
         case "Dashboard"        -> {new Dashboard().setVisible(true);  this.dispose();}
         case "Add Student"      -> {new AddStudent().setVisible(true);  this.dispose(); }
         case "View Students"    -> {new ViewStudents().setVisible(true);  this.dispose(); }
-        case "Attendance"       -> {new UpdateAttendance().setVisible(true); this.dispose(); }
+        case "Mark Attendance"  -> {new MarkAttendance().setVisible(true); this.dispose();}
+        case "View Attendance"  -> {new ViewAttendance().setVisible(true); this.dispose();}
+        case "Add Marks"        -> {new AddMarks().setVisible(true); this.dispose();}
+        case "View Marks" -> {new ViewMarks().setVisible(true); this.dispose();}
         case "Update Fees"      -> {new UpdateFees().setVisible(true); this.dispose(); }
         case "View Fees"        -> {new ViewFees().setVisible(true);  this.dispose(); }
         case "Update Timetable" -> {new UpdateTimetable().setVisible(true);  this.dispose(); }
