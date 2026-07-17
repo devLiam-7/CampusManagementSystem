@@ -5,6 +5,7 @@ import java.sql.*;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.*;
+import utils.Session;
 
 public class MarkAttendance extends BaseFrame{
     private JTable table;
@@ -28,7 +29,23 @@ public class MarkAttendance extends BaseFrame{
         titleLabel.setFont(new Font("Segoe UI" , Font.BOLD, 18));
         titleLabel.setForeground(new Color(15, 23, 42));
         
-        topBar.add(titleLabel, BorderLayout.NORTH);
+        topBar.add(titleLabel, BorderLayout.WEST);
+        
+        JComboBox<String> deptBox = new JComboBox<>();;
+        deptBox.addItem("All");
+        try {
+            Connection con = DBConnection.getConnection();
+            ResultSet rs = con.prepareStatement("SELECT DISTINCT department FROM students").executeQuery();
+            while(rs.next()) deptBox.addItem(rs.getString("department"));
+            con.close();
+        }catch (Exception e) {e.printStackTrace(); }
+        
+        deptBox.addActionListener(e -> {
+            Session.selectedDepartment = (String) deptBox.getSelectedItem();
+            loadStudents();
+        });
+        
+        topBar.add(deptBox, BorderLayout.EAST);
         
         String[] columns = {"Roll No", "Name", "Status"};
         tableModel = new DefaultTableModel(columns, 0){
@@ -98,9 +115,21 @@ public class MarkAttendance extends BaseFrame{
     tableModel.setRowCount(0);
     try {
         Connection con = DBConnection.getConnection();
-        String sql = "SELECT s.roll_no, s.name, a.status " +
-                     "FROM students s LEFT JOIN attendance a " +
-                     "ON s.roll_no = a.roll_no AND a.date = CURDATE()";
+        
+        String dept = Session.selectedDepartment;
+        String sql;
+        
+        if (dept.equals("All")) {
+            sql = "SELECT s.roll_no, s.name, a.status " +
+                  "FROM students s LEFT JOIN attendance a " +
+                  "ON s.roll_no = a.roll_no AND a.date = CURDATE()";
+        } else {
+            sql = "SELECT s.roll_no, s.name, a.status " +
+                  "FROM students s LEFT JOIN attendance a " +
+                  "ON s.roll_no = a.roll_no AND a.date = CURDATE() " +
+                  "WHERE s.department = '" + dept + "'";
+        }
+        
         PreparedStatement pst = con.prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
         
@@ -108,14 +137,14 @@ public class MarkAttendance extends BaseFrame{
             int roll = rs.getInt("roll_no");
             String name = rs.getString("name");
             String status = rs.getString("status");
-                if (status == null) status = "";
+            if (status == null) status = "";
             tableModel.addRow(new Object[]{roll, name, status});
         }
         con.close();
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, e.getMessage());
-    }  
-  }
+    }
+}
     
     private void markStatus(String status) {
     int selectedRow = table.getSelectedRow();

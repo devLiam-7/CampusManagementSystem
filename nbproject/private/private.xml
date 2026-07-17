@@ -4,6 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Java%20Project/CampusManagementSystem/src/Launcher/Launcher.java</file>
+            <file>file:/C:/Java%20Project/CampusManagementSystem/src/utils/Session.java</file>
+            <file>file:/C:/Java%20Project/CampusManagementSystem/src/ui/BaseFrame.java</file>
+            <file>file:/C:/Java%20Project/CampusManagementSystem/src/ui/AddStudent.java</file>
+            <file>file:/C:/Java%20Project/CampusManagementSystem/src/ui/ViewStudents.java</file>
+            <file>file:/C:/Java%20Project/CampusManagementSystem/src/ui/MarkAttendance.java</file>
         </group>
     </open-files>
 </project-private>

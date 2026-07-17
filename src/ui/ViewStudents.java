@@ -44,8 +44,28 @@ public class ViewStudents extends BaseFrame {
         });
 
         topBar.add(titleLabel, BorderLayout.WEST);
-        topBar.add(txtSearch, BorderLayout.EAST);
-
+        
+        JComboBox<String> deptBox = new JComboBox<>();
+        deptBox.addItem("All");
+        try {
+            Connection con = DBConnection.getConnection();
+            ResultSet rs = con.prepareStatement("SELECT DISTINCT department FROM students").executeQuery();
+            while ( rs .next()) deptBox.addItem(rs.getString("department"));
+            con.close();
+        }catch (Exception e) { e.printStackTrace(); }
+        
+        deptBox.addActionListener(e -> {
+            Session.selectedDepartment = (String) deptBox.getSelectedItem();
+            loadStudents(txtSearch.getText().trim());    
+        });
+        
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,10, 0));
+        rightPanel.setBackground(new Color(245, 247, 250));
+        rightPanel.add(deptBox);
+        rightPanel.add(txtSearch);
+        
+        topBar.add(rightPanel, BorderLayout.EAST);
+        
         String[] columns = {"Roll No", "Name", "Department", "Attendance", "Status"};
         tableModel = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int col) { return false; }
@@ -115,30 +135,40 @@ public class ViewStudents extends BaseFrame {
 
         contentArea.add(mainContent, BorderLayout.CENTER);
     }
-
+    
     private void loadStudents(String search) {
         tableModel.setRowCount(0);
         try {
-            Connection con = DBConnection.getConnection();
-            String sql = "SELECT * FROM students WHERE name LIKE ? OR roll_no LIKE ?";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, "%" + search + "%");
-            pst.setString(2, "%" + search + "%");
-            ResultSet rs = pst.executeQuery();
-
-            while (rs.next()) {
-                int roll = rs.getInt("roll_no");
-                String name = rs.getString("name");
-                String dept = rs.getString("department");
-                double attendance = rs.getDouble("attendance");
-                String status = attendance >= 75 ? "Allowed" : "Not Allowed";
-                tableModel.addRow(new Object[]{roll, name, dept, attendance, status});
-            }
-            con.close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+        Connection con = DBConnection.getConnection();
+        
+        String dept = Session.selectedDepartment;
+        String sql;
+        
+        if (dept.equals("All")) {
+            sql = "SELECT * FROM students WHERE name LIKE ? OR roll_no LIKE ?";
+        } else {
+            sql = "SELECT * FROM students WHERE (name LIKE ? OR roll_no LIKE ?) AND department = '" + dept + "'";
         }
+        
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, "%" + search + "%");
+        pst.setString(2, "%" + search + "%");
+        ResultSet rs = pst.executeQuery();
+        
+        while (rs.next()) {
+            int roll = rs.getInt("roll_no");
+            String name = rs.getString("name");
+            String department = rs.getString("department");
+            double attendance = rs.getDouble("attendance");
+            String status = attendance >= 75 ? "Allowed" : "Not Allowed";
+            tableModel.addRow(new Object[]{roll, name, department, attendance, status});
+        }
+        con.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e.getMessage());
     }
+}
+
     private void deleteStudent() {
     int selectedRow = table.getSelectedRow();
     

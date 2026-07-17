@@ -5,6 +5,7 @@ import java.sql.*;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.*;
+import utils.Session;
 
 public class ViewAttendance extends BaseFrame{
     private JTable table;
@@ -46,8 +47,27 @@ public class ViewAttendance extends BaseFrame{
         view.setAlignmentX(Component.LEFT_ALIGNMENT);
         view.addActionListener(e -> loadStudents(date.getText().trim()));
         
-            topBar.add(date, BorderLayout.CENTER);
-        topBar.add(view, BorderLayout.EAST);
+        JComboBox<String> deptBox = new JComboBox<>();
+        deptBox.addItem("All");
+            try {
+                Connection con = DBConnection.getConnection();
+                ResultSet rs = con.prepareStatement("SELECT DISTINCT department FROM students").executeQuery();
+                while (rs.next()) deptBox.addItem(rs.getString("department"));
+                con.close();
+            } catch (Exception e) { e.printStackTrace(); }
+            
+            deptBox.addActionListener(e -> {
+            Session.selectedDepartment = (String) deptBox.getSelectedItem();
+            loadStudents(date.getText().trim());
+        });
+
+    JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+    rightPanel.setBackground(new Color(245, 247, 250));
+    rightPanel.add(deptBox);
+    rightPanel.add(date);
+    rightPanel.add(view);
+
+    topBar.add(rightPanel, BorderLayout.EAST);
         
         String[] columns = {"Roll no", "Name", "Date", "Status"};
         tableModel = new DefaultTableModel(columns, 0) {
@@ -82,30 +102,42 @@ public class ViewAttendance extends BaseFrame{
         
         contentArea.add(mainContent, BorderLayout.CENTER);
     }
-    private void loadStudents(String search) {
-        tableModel.setRowCount(0);
- 
-    if (search == null || search.isEmpty()) return;
     
-        try {
-            Connection con = DBConnection.getConnection();
-             String sql = "SELECT s.roll_no, s.name, a.date, a.status " +
-             "FROM attendance a JOIN students s ON a.roll_no = s.roll_no " +
-             "WHERE a.date = ?";
-             PreparedStatement pst = con.prepareStatement(sql);
-             pst.setString(1, search);
-             ResultSet rs = pst.executeQuery();
+    private void loadStudents(String search) {
+    tableModel.setRowCount(0);
 
-            while (rs.next()) {
-                int roll = rs.getInt("roll_no");
-                String name = rs.getString("name");
-                String Date = rs.getString("date");
-                String status = rs.getString("status");
-                tableModel.addRow(new Object[]{roll, name, Date, status});
-            }
-            con.close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+    if (search == null || search.isEmpty()) return;
+
+    try {
+        Connection con = DBConnection.getConnection();
+        
+        String dept = Session.selectedDepartment;
+        String sql;
+        
+        if (dept.equals("All")) {
+            sql = "SELECT s.roll_no, s.name, a.date, a.status " +
+                  "FROM attendance a JOIN students s ON a.roll_no = s.roll_no " +
+                  "WHERE a.date = ?";
+        } else {
+            sql = "SELECT s.roll_no, s.name, a.date, a.status " +
+                  "FROM attendance a JOIN students s ON a.roll_no = s.roll_no " +
+                  "WHERE a.date = ? AND s.department = '" + dept + "'";
+        }
+        
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, search);
+        ResultSet rs = pst.executeQuery();
+        
+        while (rs.next()) {
+            int roll = rs.getInt("roll_no");
+            String name = rs.getString("name");
+            String Date = rs.getString("date");
+            String status = rs.getString("status");
+            tableModel.addRow(new Object[]{roll, name, Date, status});
+        }
+        con.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
 }

@@ -5,6 +5,7 @@ import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
+import utils.Session;
 
 public class ViewFees extends BaseFrame{
     
@@ -42,7 +43,28 @@ public class ViewFees extends BaseFrame{
     });
         
         topBar.add(titleLabel , BorderLayout.WEST);
-        topBar.add(txtSearch , BorderLayout.EAST);
+        
+    JComboBox<String> deptBox = new JComboBox<>();
+    deptBox.addItem("All");
+    
+    try {
+        Connection con = DBConnection.getConnection();
+        ResultSet rs = con.prepareStatement("SELECT DISTINCT department FROM students").executeQuery();
+        while (rs.next()) deptBox.addItem(rs.getString("department"));
+        con.close();
+    } catch (Exception e) { e.printStackTrace(); }
+
+        deptBox.setSelectedIndex(0);
+        deptBox.addActionListener(e -> {
+        Session.selectedDepartment = (String) deptBox.getSelectedItem();
+        loadFees(txtSearch.getText().trim());
+    });
+
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        rightPanel.setBackground(new Color(245, 247, 250));
+        rightPanel.add(deptBox);
+        rightPanel.add(txtSearch);
+        topBar.add(rightPanel, BorderLayout.EAST);
         
         String[] columns = {"Roll No","Total Fees","Paid Fees","Due Fees","Status"};
         tableModel = new DefaultTableModel(columns,0){
@@ -80,7 +102,13 @@ public class ViewFees extends BaseFrame{
         tableModel.setRowCount(0);
         try{
             Connection con = DBConnection.getConnection();
-            String sql = "SELECT * FROM fees WHERE roll_no LIKE ?";
+            String dept = Session.selectedDepartment;
+            String sql;
+                if (dept.equals("All")) {
+                sql = "SELECT f.* FROM fees f WHERE f.roll_no LIKE ?";
+            } else {
+                sql = "SELECT f.* FROM fees f JOIN students s ON f.roll_no = s.roll_no WHERE f.roll_no LIKE ? AND s.department = '" + dept + "'";
+            }   
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, "%" + search + "%");
             ResultSet rs = pst.executeQuery();
